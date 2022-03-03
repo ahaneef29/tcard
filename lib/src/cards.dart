@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 
@@ -98,7 +99,7 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
   //  前面的卡片
   Widget _frontCard(BoxConstraints constraints) {
     Widget child =
-    _frontCardIndex < _cards.length ? _cards[_frontCardIndex] : Container();
+        _frontCardIndex < _cards.length ? _cards[_frontCardIndex] : Container();
     bool forward = _cardChangeController.status == AnimationStatus.forward;
     bool reverse = _cardReverseController.status == AnimationStatus.forward;
 
@@ -292,7 +293,6 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
 
   get runChangeOrderAnimation => _runChangeOrderAnimation;
 
-  // 运行卡片后退动画
   void _runReverseOrderAnimation() {
     if (_isAnimating()) {
       return;
@@ -314,13 +314,15 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
     _frontCardIndex++;
     _resetFrontCard();
     if (widget.onForward != null && widget.onForward is Function) {
-      int _index = _frontCardIndex - 1 > 0 ?  _frontCardIndex - 1 : 0;
-      SwipeInfo? info = _swipeInfoList.isNotEmpty ? _swipeInfoList[_index] :  SwipeInfo(-1, SwipeDirection.None);
+      int _index = _frontCardIndex - 1 > 0 ? _frontCardIndex - 1 : 0;
+
+      SwipeInfo? info = _swipeInfoList.isNotEmpty
+          ? _swipeInfoList[_index]
+          : SwipeInfo(-1, SwipeDirection.None);
       widget.onForward!(
         _frontCardIndex,
         info,
       );
-
     }
 
     if (widget.onEnd != null &&
@@ -343,7 +345,6 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
 
       widget.onBack!(_frontCardIndex, info);
     }
-
 
     if (widget.onEnd != null &&
         widget.onEnd is Function &&
@@ -410,14 +411,12 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
 
     // 判断是否运行向前的动画，否则回弹
     if (isSwipeLeft || isSwipeRight) {
-      _runChangeOrderAnimation();
       if (isSwipeLeft) {
         _swipeInfoList.add(SwipeInfo(_frontCardIndex, SwipeDirection.Left));
-        _backCallback();
       } else {
         _swipeInfoList.add(SwipeInfo(_frontCardIndex, SwipeDirection.Right));
-        _forwardCallback();
       }
+      _runChangeOrderAnimation();
     } else {
       _runReboundAnimation(details.velocity.pixelsPerSecond, size);
     }
@@ -448,7 +447,7 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
       ..addListener(() => setState(() {}))
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          //   _forwardCallback();
+          _forwardCallback();
         }
       });
 
@@ -471,10 +470,10 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: widget.delaySlideFor),
     )..addListener(() {
-      setState(() {
-        _frontCardAlignment = _reboundAnimation.value;
+        setState(() {
+          _frontCardAlignment = _reboundAnimation.value;
+        });
       });
-    });
   }
 
   @override
@@ -505,18 +504,18 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
               // 使用一个 SizedBox 覆盖父元素整个区域
               _cardChangeController.status != AnimationStatus.forward
                   ? SizedBox.expand(
-                child: GestureDetector(
-                  onPanDown: (DragDownDetails details) {
-                    _stop();
-                  },
-                  onPanUpdate: (DragUpdateDetails details) {
-                    _updateFrontCardAlignment(details, size);
-                  },
-                  onPanEnd: (DragEndDetails details) {
-                    _judgeRunAnimation(details, size);
-                  },
-                ),
-              )
+                      child: GestureDetector(
+                        onPanDown: (DragDownDetails details) {
+                          _stop();
+                        },
+                        onPanUpdate: (DragUpdateDetails details) {
+                          _updateFrontCardAlignment(details, size);
+                        },
+                        onPanEnd: (DragEndDetails details) {
+                          _judgeRunAnimation(details, size);
+                        },
+                      ),
+                    )
                   : IgnorePointer(),
             ],
           );
