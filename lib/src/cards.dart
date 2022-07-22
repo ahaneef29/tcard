@@ -415,6 +415,9 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
     final bool isSwipeLeft = _frontCardAlignment.x < -limit;
     final bool isSwipeRight = _frontCardAlignment.x > limit;
 
+    final double verticalLimit = -5.0;
+    final bool isSwipeUp = _frontCardAlignment.y < verticalLimit;
+
     // 判断是否运行向前的动画，否则回弹
     if (isSwipeLeft || isSwipeRight) {
       if (isSwipeLeft) {
@@ -422,6 +425,10 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
       } else {
         _swipeInfoList.add(SwipeInfo(_frontCardIndex, SwipeDirection.Right));
       }
+      _runChangeOrderAnimation();
+    }
+    if (isSwipeUp) {
+      _swipeInfoList.add(SwipeInfo(_frontCardIndex, SwipeDirection.Up));
       _runChangeOrderAnimation();
     } else {
       _runReboundAnimation(details.velocity.pixelsPerSecond, size);

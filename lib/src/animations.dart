@@ -51,14 +51,18 @@ class CardAnimations {
     Alignment beginAlignment,
     SwipeInfo info,
   ) {
+    Alignment endAlignment = beginAlignment;
+    if (info.direction == SwipeDirection.Left) {
+      endAlignment = Alignment(beginAlignment.x - 30.0, 0.0);
+    } else if (info.direction == SwipeDirection.Right) {
+      endAlignment = Alignment(beginAlignment.x + 30.0, 0.0);
+    } else if (info.direction == SwipeDirection.Up) {
+      endAlignment = Alignment(0.0, beginAlignment.y - 30.0);
+    }
+
     return AlignmentTween(
       begin: beginAlignment,
-      end: Alignment(
-        info.direction == SwipeDirection.Left
-            ? beginAlignment.x - 30.0
-            : beginAlignment.x + 30.0,
-        0.0,
-      ),
+      end: endAlignment,
     ).animate(
       CurvedAnimation(
         parent: parent,
