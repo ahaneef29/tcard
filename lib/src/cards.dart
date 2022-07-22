@@ -9,7 +9,7 @@ import 'swipe_info.dart';
 
 typedef ForwardCallback(int index, SwipeInfo info);
 typedef BackCallback(int index, SwipeInfo info);
-typedef EndCallback();
+typedef EndCallback(SwipeInfo info);
 
 /// 卡片列表
 class TCard extends StatefulWidget {
@@ -328,7 +328,10 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
     if (widget.onEnd != null &&
         widget.onEnd is Function &&
         _frontCardIndex >= _cards.length) {
-      widget.onEnd!();
+      SwipeInfo? info = _swipeInfoList.isNotEmpty
+          ? _swipeInfoList[_cards.length - 1]
+          : SwipeInfo(-1, SwipeDirection.None);
+      widget.onEnd!(info);
     }
   }
 
@@ -349,7 +352,10 @@ class TCardState extends State<TCard> with TickerProviderStateMixin {
     if (widget.onEnd != null &&
         widget.onEnd is Function &&
         _frontCardIndex >= _cards.length) {
-      widget.onEnd!();
+      SwipeInfo? info = _swipeInfoList.isNotEmpty
+          ? _swipeInfoList[_cards.length - 1]
+          : SwipeInfo(-1, SwipeDirection.None);
+      widget.onEnd!(info);
     }
   }
 
